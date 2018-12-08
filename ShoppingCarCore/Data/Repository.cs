@@ -1,4 +1,5 @@
-﻿using ShoppingCarCore.Data.Entities;
+﻿using Microsoft.Extensions.Logging;
+using ShoppingCarCore.Data.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,12 @@ namespace ShoppingCarCore.Data
     public class Repository : IRepository
     {
         private readonly ApplicationDbContext context;
+        private readonly ILogger<Repository> logger;
 
-        public Repository(ApplicationDbContext context)
+        public Repository(ApplicationDbContext context, ILogger<Repository> logger)
         {
             this.context = context;
+            this.logger = logger;
         }
 
         public IEnumerable<Product> GetProducts()
@@ -32,7 +35,15 @@ namespace ShoppingCarCore.Data
 
         public async Task<bool> SaveAllAsync()
         {
-            return await this.context.SaveChangesAsync() > 0;
+            try
+            {
+                return await this.context.SaveChangesAsync() > 0;
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError($"Something horrible has happened: {ex}");
+                return false;
+            }
         }
 
         public void UpdateProduct(Product product)
