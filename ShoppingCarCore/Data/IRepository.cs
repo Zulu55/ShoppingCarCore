@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ShoppingCarCore.Data.Entities;
+using ShoppingCarCore.Models;
 
 namespace ShoppingCarCore.Data
 {
@@ -19,5 +20,11 @@ namespace ShoppingCarCore.Data
         void UpdateProduct(Product product);
 
         bool ProductExists(int id);
+
+        IEnumerable<Order> GetOrders();
+
+        void AddProductToOrder(OrderDetailViewModel model);
+
+        IEnumerable<OrderDetailTmp> GetOrderDetailTmps();
     }
 }

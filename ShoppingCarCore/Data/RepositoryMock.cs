@@ -3,12 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ShoppingCarCore.Data.Entities;
+using ShoppingCarCore.Models;
 
 namespace ShoppingCarCore.Data
 {
     public class RepositoryMock : IRepository
     {
         public void AddProduct(Product product)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddProductToOrder(OrderDetailViewModel model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<OrderDetailTmp> GetOrderDetailTmps()
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Order> GetOrders()
         {
             throw new NotImplementedException();
         }

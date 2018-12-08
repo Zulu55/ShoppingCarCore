@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShoppingCarCore.Data;
 
 namespace ShoppingCarCore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181208180549_Order models")]
+    partial class Ordermodels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,25 +224,6 @@ namespace ShoppingCarCore.Data.Migrations
                     b.ToTable("OrderDetails");
                 });
 
-            modelBuilder.Entity("ShoppingCarCore.Data.Entities.OrderDetailTmp", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<decimal>("Price");
-
-                    b.Property<int?>("ProductId");
-
-                    b.Property<double>("Quantity");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("OrderDetailTmps");
-                });
-
             modelBuilder.Entity("ShoppingCarCore.Data.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -311,13 +294,6 @@ namespace ShoppingCarCore.Data.Migrations
                         .WithMany("Details")
                         .HasForeignKey("OrderId");
 
-                    b.HasOne("ShoppingCarCore.Data.Entities.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId");
-                });
-
-            modelBuilder.Entity("ShoppingCarCore.Data.Entities.OrderDetailTmp", b =>
-                {
                     b.HasOne("ShoppingCarCore.Data.Entities.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId");

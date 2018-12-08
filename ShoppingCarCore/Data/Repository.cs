@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using ShoppingCarCore.Data.Entities;
+using ShoppingCarCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +61,31 @@ namespace ShoppingCarCore.Data
         public bool ProductExists(int id)
         {
             return this.context.Products.Any(p => p.Id == id);
+        }
+
+        public IEnumerable<Order> GetOrders()
+        {
+            return this.context.Orders
+                .Include(o => o.Details)
+                .ThenInclude(d => d.Product)
+                .OrderBy(o => o.Date);
+        }
+
+        public void AddProductToOrder(OrderDetailViewModel model)
+        {
+            var product = this.GetProduct(model.ProductId);
+
+            this.context.OrderDetailTmps.Add(new OrderDetailTmp
+            {
+                Price = product.Price,
+                Product = product,
+                Quantity = model.Quantity
+            });
+        }
+
+        public IEnumerable<OrderDetailTmp> GetOrderDetailTmps()
+        {
+            return this.context.OrderDetailTmps.Include(o => o.Product);
         }
     }
 }
