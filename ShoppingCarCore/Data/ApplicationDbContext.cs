@@ -7,7 +7,7 @@ using ShoppingCarCore.Data.Entities;
 
 namespace ShoppingCarCore.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<StoreUser>
     {
         public DbSet<Product> Products { get; set; }
 

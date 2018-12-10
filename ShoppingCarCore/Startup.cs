@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using ShoppingCarCore.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ShoppingCarCore.Data.Entities;
 
 namespace ShoppingCarCore
 {
@@ -27,6 +28,16 @@ namespace ShoppingCarCore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddIdentity<StoreUser, IdentityRole>(cfg =>
+            {
+                cfg.User.RequireUniqueEmail = true;
+                cfg.Password.RequiredLength = 6;
+                cfg.Password.RequiredUniqueChars = 0;
+                cfg.Password.RequireLowercase = false;
+                cfg.Password.RequireNonAlphanumeric = false;
+                cfg.Password.RequireUppercase = false;
+            }).AddEntityFrameworkStores<ApplicationDbContext>();
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -38,16 +49,18 @@ namespace ShoppingCarCore
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>(cfg => 
-            {
-                cfg.User.RequireUniqueEmail = true;
-                cfg.Password.RequiredLength = 6;
-                cfg.Password.RequiredUniqueChars = 0;
-                cfg.Password.RequireLowercase = false;
-                cfg.Password.RequireNonAlphanumeric = false;
-                cfg.Password.RequireUppercase = false;
-            })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            //services.AddDefaultIdentity<IdentityUser>(cfg => 
+            //{
+            //    cfg.User.RequireUniqueEmail = true;
+            //    cfg.Password.RequiredLength = 6;
+            //    cfg.Password.RequiredUniqueChars = 0;
+            //    cfg.Password.RequireLowercase = false;
+            //    cfg.Password.RequireNonAlphanumeric = false;
+            //    cfg.Password.RequireUppercase = false;
+            //})
+            //    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddTransient<DBSeeder>();
 
             services.AddScoped<IRepository, Repository>();
 
