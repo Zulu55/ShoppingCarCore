@@ -26,5 +26,13 @@ namespace ShoppingCarCore.Data
         void AddProductToOrder(OrderDetailViewModel model);
 
         IEnumerable<OrderDetailTmp> GetOrderDetailTmps();
+
+        OrderDetailTmp GetOrderDetailTmp(int id);
+
+        void DeleteOrderDetailTmp(int id);
+
+        void ModifyOrderDetailTmp(int id, int quantity);
+
+        void SaveOrder();
     }
 }

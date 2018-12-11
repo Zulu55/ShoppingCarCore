@@ -19,6 +19,60 @@ namespace ShoppingCarCore.Controllers
             this.repository = repository;
         }
 
+        public IActionResult IncreaseQuantity(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var orderDetailTmp = this.repository.GetOrderDetailTmp(id.Value);
+            if (orderDetailTmp == null)
+            {
+                return NotFound();
+            }
+
+            this.repository.ModifyOrderDetailTmp(id.Value, 1);
+            this.repository.SaveAllAsync().Wait();
+            return RedirectToAction("Create");
+        }
+
+        public IActionResult DecraseQuantity(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var orderDetailTmp = this.repository.GetOrderDetailTmp(id.Value);
+            if (orderDetailTmp == null)
+            {
+                return NotFound();
+            }
+
+            this.repository.ModifyOrderDetailTmp(id.Value, -1);
+            this.repository.SaveAllAsync().Wait();
+            return RedirectToAction("Create");
+        }
+
+        public IActionResult DeleteDetail(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var orderDetailTmp = this.repository.GetOrderDetailTmp(id.Value);
+            if (orderDetailTmp == null)
+            {
+                return NotFound();
+            }
+
+            this.repository.DeleteOrderDetailTmp(id.Value);
+            this.repository.SaveAllAsync().Wait();
+            return RedirectToAction("Create");
+        }
+
         public IActionResult Index()
         {
             return View(this.repository.GetOrders());
@@ -27,6 +81,19 @@ namespace ShoppingCarCore.Controllers
         public IActionResult Create()
         {
             return View(this.repository.GetOrderDetailTmps());
+        }
+
+        [HttpPost]
+        public IActionResult Create(List<OrderDetailTmp> model)
+        {
+            if (ModelState.IsValid)
+            {
+                this.repository.SaveOrder();
+                this.repository.SaveAllAsync().Wait();
+                return RedirectToAction("Index");
+            }
+
+            return View(model);
         }
 
         public IActionResult AddProduct()

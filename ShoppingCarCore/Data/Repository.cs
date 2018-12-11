@@ -74,18 +74,78 @@ namespace ShoppingCarCore.Data
         public void AddProductToOrder(OrderDetailViewModel model)
         {
             var product = this.GetProduct(model.ProductId);
+            var oldOrderDetailTmp = this.context.OrderDetailTmps
+                .Where(o => o.Product.Id == model.ProductId)
+                .FirstOrDefault();
 
-            this.context.OrderDetailTmps.Add(new OrderDetailTmp
+            if (oldOrderDetailTmp == null)
             {
-                Price = product.Price,
-                Product = product,
-                Quantity = model.Quantity
-            });
+                this.context.OrderDetailTmps.Add(new OrderDetailTmp
+                {
+                    Price = product.Price,
+                    Product = product,
+                    Quantity = model.Quantity
+                });
+            }
+            else
+            {
+                oldOrderDetailTmp.Quantity += model.Quantity;
+                this.context.Update(oldOrderDetailTmp);
+            }
         }
 
         public IEnumerable<OrderDetailTmp> GetOrderDetailTmps()
         {
             return this.context.OrderDetailTmps.Include(o => o.Product);
+        }
+
+        public OrderDetailTmp GetOrderDetailTmp(int id)
+        {
+            return this.context.OrderDetailTmps.Find(id);
+        }
+
+        public void DeleteOrderDetailTmp(int id)
+        {
+            var orderDetailTmp = this.GetOrderDetailTmp(id);
+            if (orderDetailTmp != null)
+            {
+                this.context.OrderDetailTmps.Remove(orderDetailTmp);
+            }
+        }
+
+        public void ModifyOrderDetailTmp(int id, int quantity)
+        {
+            var orderDetailTmp = this.GetOrderDetailTmp(id);
+            if (orderDetailTmp != null)
+            {
+                if (orderDetailTmp.Quantity > 1)
+                {
+                    orderDetailTmp.Quantity += quantity;
+                    this.context.Update(orderDetailTmp);
+                }
+            }
+        }
+
+        public void SaveOrder()
+        {
+            var orderDetailsTmp = this.context.OrderDetailTmps
+                .Include(o => o.Product)
+                .ToList();
+
+            var order = new Order
+            {
+                Date = DateTime.UtcNow,
+                IsDeliveried = false,
+                Details = orderDetailsTmp.Select(odt => new OrderDetail
+                {
+                    Price = odt.Price,
+                    Product = odt.Product,
+                    Quantity = odt.Quantity
+                }).ToList()
+            };
+
+            this.context.Orders.Add(order);
+            this.context.OrderDetailTmps.RemoveRange(orderDetailsTmp);
         }
     }
 }

@@ -49,6 +49,8 @@ namespace ShoppingCarCore
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddTransient<DBSeeder>();
+
             services.AddScoped<IRepository, Repository>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

@@ -19,6 +19,16 @@ namespace ShoppingCarCore.Data
             throw new NotImplementedException();
         }
 
+        public void DeleteOrderDetailTmp(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public OrderDetailTmp GetOrderDetailTmp(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<OrderDetailTmp> GetOrderDetailTmps()
         {
             throw new NotImplementedException();
@@ -65,6 +75,11 @@ namespace ShoppingCarCore.Data
             return products;
         }
 
+        public void ModifyOrderDetailTmp(int id, int quantity)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool ProductExists(int id)
         {
             throw new NotImplementedException();
@@ -76,6 +91,11 @@ namespace ShoppingCarCore.Data
         }
 
         public Task<bool> SaveAllAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SaveOrder()
         {
             throw new NotImplementedException();
         }
